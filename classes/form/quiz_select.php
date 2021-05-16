@@ -20,23 +20,24 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once("$CFG->libdir/formslib.php");
 
-// class local_pdfquizgenerator extends local_base {
+class quiz_select extends moodleform {
+    public function definition() {
+        global $DB;
 
-//     public function init() {
-//         $this->title = get_string('pluginname', 'local_pdfquizgenerator');
-//         $this->hidetitle = 0;
-//     }
+        $mform = $this->_form;
 
-//     public function applicable_formats() {
-//         return array(
-//             'all' => false,
-//             'site' => true,
-//             'site-index' => true,
-//             'course-view' => true,
-//             'course-view-social' => false,
-//             'mod' => true,
-//             'mod-quiz' => true
-//         );
-//     }
-// }
+        // TODO: Handle different coursers
+        // A course should be selected before selecting quizes.
+        // We should know from what course we are selecting a course.
+        $mform->addElement(
+            'select',
+            'quizid',
+            'Select quiz',
+            $DB->get_records_menu('quiz', array(), 'id')
+        );
+
+        $this->add_action_buttons(false);
+    }
+}
