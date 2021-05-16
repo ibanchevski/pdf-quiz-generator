@@ -1,2 +1,6 @@
-# pdf-quiz-generator
-Moodle plugin for generating PDFs from question banks
+# PDF Quiz generator
+
+## Functionality
+Generate PDF files from:
+- Question banks
+- Custom questions collection
