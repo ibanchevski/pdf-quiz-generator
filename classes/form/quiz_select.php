@@ -31,12 +31,20 @@ class quiz_select extends moodleform {
         // TODO: Handle different coursers
         // A course should be selected before selecting quizes.
         // We should know from what course we are selecting a course.
-        $mform->addElement(
-            'select',
-            'quizid',
-            'Select quiz',
-            $DB->get_records_menu('quiz', array(), 'id')
-        );
+        // $mform->addElement(
+        //     'select',
+        //     'quizid',
+        //     'Select quiz',
+        //     $DB->get_records('quiz', array(), 'id')
+        // );
+
+        $quizes = $DB->get_records('quiz', array(), 'id', 'id,name');
+        $options = array();
+        foreach ($quizes as $quiz) {
+            $options[$quiz->id] = $quiz->name;
+        }
+
+        $mform->addElement('select', 'selectedQuizId', 'Select quiz', $options);
 
         $this->add_action_buttons(false);
     }

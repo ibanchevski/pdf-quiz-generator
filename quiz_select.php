@@ -34,21 +34,26 @@ echo $OUTPUT->header();
 if ($mform->is_cancelled()) {
     echo "Cancelled quiz form \n";
 } else if ($quizFormData = $mform->get_data()) {
-    $selectedQuizID = $quizFormData->quizid;
-    $quiz = $DB->get_record('quiz', array('id' => $selectedQuizID), 'id, name, course');
-    echo "Selected quiz: $quiz->name ($selectedQuizID)\n";
+    // Get the selected quiz
+    $selectedQuizId = $quizFormData->selectedQuizId;
+    $selectedQuiz = $DB->get_record('quiz', array('id' => $selectedQuizId), 'id, name, course');
 
-    // Display quiz questions with answers
-    $questionsWithAnswersQuery = 'select mdl_quiz_slots.id as slotid,slot,quizid,page,questionid, mdl_question.name as questionname, mdl_question_answers.answer as questionanswer from mdl_quiz_slots join mdl_question on mdl_question.id=questionid join mdl_question_answers on mdl_question_answers.question=questionid where quizid=2;';
-    $questionsWithAnswers = $DB->get_records_sql($questionsWithAnswersQuery);
-    var_dump($questionsWithAnswers);
-    foreach($questionsWithAnswers as $question) {
-        echo "<ul>";
-        echo "<li>$question->questionname</li>";
-        echo "<p>$question->questionanswer</p>";
-        echo "</ul>";
+    echo "Selected quiz: $selectedQuiz->name ($selectedQuizId)\n";
+
+    // Print the quiz questions with answers;
+    $quizQuestions = $DB->get_records('quiz_slots', array('quizid' => $selectedQuizId), 'questionid', 'questionid');
+    // var_dump($quizQuestions);
+
+    $questionsAnswers = array();
+
+    foreach($quizQuestions as $question) {
+        $question = $DB->get_record('question', array('id' => $question->questionid), 'id, name, questiontext');
+        $questionName = $question->questiontext;
+
+        $questionAnswers = $DB->get_records('question_answers', array('question' => $question->id), 'id', 'id, answer');
+
+        $questionsAnswers[$questionName] = $questionAnswers;
     }
-
 } else {
     $mform->display();
 }
