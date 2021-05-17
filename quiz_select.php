@@ -54,6 +54,15 @@ if ($mform->is_cancelled()) {
 
         $questionsAnswers[$questionName] = $questionAnswers;
     }
+
+    echo "<ol>";
+    foreach ($questionsAnswers as $questionName => $questionAnswers) {
+        echo "<li>$questionName</li>\n";
+        foreach ($questionAnswers as $questionAnswer) {
+            echo "<p>$questionAnswer->answer</p>";
+        }
+    }
+    echo "</ol>";
 } else {
     $mform->display();
 }
